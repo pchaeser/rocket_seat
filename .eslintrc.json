@@ -28,7 +28,14 @@
       {
         "ts": "never"
       }
-    ]
+    ],
+    "@typescript-eslint/interface-name-prefix": 0,
+    "lines-between-class-members": [
+      "error",
+      "always",
+      { "exceptAfterSingleLine": true }
+    ],
+    "no-use-before-define": ["error", "never"]
   },
   "settings": {
     "import/resolver": {
