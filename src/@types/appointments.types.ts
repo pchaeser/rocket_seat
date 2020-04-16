@@ -4,12 +4,7 @@ export interface IAppointment {
   date: Date
 }
 
-export interface ICreateAppointmentDTO {
-  provider: string
-  date: Date
-}
-
 export interface IRequest {
-  provider: string
+  provider_id: string
   date: Date
 }
