@@ -3,6 +3,7 @@ import { startOfHour } from 'date-fns'
 import { IRequest } from '../@types/appointments.types'
 import Appointment from '../models/Appointment'
 import AppointmentsRepository from '../repositories/AppointmentsRepository'
+import AppError from '../errors/AppError'
 
 export default class CreateAppointmentService {
   public async execute({ provider_id, date }: IRequest): Promise<Appointment> {
@@ -10,7 +11,7 @@ export default class CreateAppointmentService {
     const appointmentDate = startOfHour(date)
 
     if ((await appointmentsRepository.findByDate(appointmentDate)) !== null) {
-      throw new Error('This appointment slot is already booked!')
+      throw new AppError('This appointment slot is already booked!')
     }
 
     const appointment = appointmentsRepository.create({

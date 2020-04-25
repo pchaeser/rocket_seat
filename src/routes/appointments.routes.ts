@@ -15,19 +15,14 @@ routes.get('/', async (req: Request, res: Response) => {
 routes.post('/', async (req: Request, res: Response) => {
   const { provider_id, date } = req.body
 
-  try {
-    const parsedDate = parseISO(date)
-    const createAppointment = new CreateAppointmentService()
+  const parsedDate = parseISO(date)
+  const createAppointment = new CreateAppointmentService()
+  const appointment = await createAppointment.execute({
+    date: parsedDate,
+    provider_id
+  })
 
-    const appointment = await createAppointment.execute({
-      date: parsedDate,
-      provider_id
-    })
-
-    return res.json(appointment)
-  } catch (err) {
-    return res.status(400).json({ message: err.message })
-  }
+  return res.json(appointment)
 })
 
 export default routes

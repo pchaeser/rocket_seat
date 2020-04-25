@@ -1,29 +1,34 @@
 import { Router } from 'express'
 import { getRepository } from 'typeorm'
+import multer from 'multer'
+import uploadConfig from '../config/upload'
 import CreateUserService from '../services/CreateUserService'
+import UpdateUserAvatarService from '../services/UpdateUserAvatarService'
 import User from '../models/User'
 
 const routes = Router()
+const upload = multer(uploadConfig)
 
 routes.get('/', async (req, res) => {
-  try {
-    const users = await getRepository(User).find()
-    res.json(users.map(({ password, ...user }) => user))
-  } catch (err) {
-    return res.status(400).json({ error: err.message })
-  }
+  const users = await getRepository(User).find()
+  res.json(users.map(({ password, ...user }) => user))
 })
 
 routes.post('/', async (req, res) => {
-  try {
-    const { name, email, password } = req.body
+  const { name, email, password } = req.body
 
-    return res.json(
-      await new CreateUserService().execute({ name, email, password })
-    )
-  } catch (err) {
-    return res.status(400).json({ error: err.message })
-  }
+  return res.json(
+    await new CreateUserService().execute({ name, email, password })
+  )
+})
+
+routes.patch('/avatar', upload.single('avatar'), async (req, res) => {
+  return res.json(
+    await new UpdateUserAvatarService().execute({
+      user_id: req.user.id,
+      avatarFilename: req.file.filename
+    })
+  )
 })
 
 export default routes

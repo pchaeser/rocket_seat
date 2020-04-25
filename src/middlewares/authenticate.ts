@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
 import { verify } from 'jsonwebtoken'
 import { ITokenPayload } from '../@types/login.types'
+import AppError from '../errors/AppError'
 
 export default function (
   req: Request,
@@ -10,7 +11,7 @@ export default function (
   const authHeader = req.headers.authorization
 
   if (!authHeader) {
-    throw new Error('JWT token was not provided.')
+    throw new AppError('JWT token was not provided.', 401)
   }
 
   const [, token] = authHeader.split(' ')
@@ -22,6 +23,6 @@ export default function (
 
     return next()
   } catch {
-    throw new Error('Invalid JWT token.')
+    throw new AppError('Invalid JWT token.', 401)
   }
 }
